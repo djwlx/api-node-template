@@ -1,34 +1,60 @@
 const path = require("path");
 const log4js = require("log4js");
-
 const LOG_PATH = path.join(path.resolve(__dirname, "../../"), "logs");
+// 对日志进行级别分类
+
 log4js.configure({
   appenders: {
-    access: {
-      type: "dateFile",
-      pattern: "-yyyy-MM-dd.log", //生成文件的规则
-      alwaysIncludePattern: true, // 文件名始终以日期区分
-      encoding: "utf-8",
-      filename: path.join(LOG_PATH, "/yyyy-MM/access"), //生成文件名
-    },
-    application: {
-      type: "dateFile",
-      pattern: "-yyyy-MM-dd.log",
+    info: {
+      type: "file",
+      pattern: "yyyy-MM-dd.log",
       alwaysIncludePattern: true,
-      encoding: "utf-8",
-      filename: path.join(LOG_PATH, "/yyyy-MM/application"),
+      maxLogSize: 10485760,
+      filename: path.join(LOG_PATH, "info"), //生成文件名
+    },
+    error: {
+      type: "file",
+      pattern: "yyyy-MM-dd.log",
+      alwaysIncludePattern: true,
+      maxLogSize: 10485760,
+      filename: path.join(LOG_PATH, "error"),
+    },
+    dataBase: {
+      type: "file",
+      pattern: "yyyy-MM-dd.log",
+      alwaysIncludePattern: true,
+      maxLogSize: 10485760,
+      filename: path.join(LOG_PATH, "dataBase"),
+    },
+    errorFilter: {
+      type: "logLevelFilter",
+      level: "error",
+      appender: "error",
+    },
+    infoFilter: {
+      type: "logLevelFilter",
+      level: "info",
+      appender: "info",
     },
     out: {
       type: "console",
     },
   },
   categories: {
-    default: { appenders: ["out"], level: "info" },
-    access: { appenders: ["access"], level: "info" },
-    application: { appenders: ["application"], level: "all" },
+    default: {
+      appenders: ["infoFilter", "errorFilter", "out"],
+      level: "all",
+    },
+    dataBase: {
+      appenders: ["dataBase"],
+      level: "all",
+    },
   },
 });
 
-// getLogger 传参指定的是类型
-exports.accessLogger = () => log4js.koaLogger(log4js.getLogger("access")); // 记录所有访问级别的日志
-exports.logger = log4js.getLogger("application");
+const log = log4js.getLogger();
+const baseLog = log4js.getLogger("dataBase");
+module.exports = {
+  log,
+  baseLog,
+};
