@@ -1,26 +1,25 @@
 // 日志记录中间件
+const { log } = require("../utils/logger");
+const logMrak = (options) => {
+  return async (ctx, next) => {
+    const startTime = Date.now();
+    const {
+      method, // 请求方法
+      url, // 请求链接
+    } = ctx?.request;
 
-// const getLogInfo
+    // 记录应用中的错误
+    try {
+      await next();
+    } catch (err) {
+      log.error(err);
+    }
 
-const log = (options) => {
-  const a = "ooo";
-  return (ctx, next) => {
-    console.log(ctx, next);
-    // const {
-    //   method, // 请求方法
-    //   url, // 请求链接
-    //   host, // 发送请求的客户端的host
-    //   headers, // 请求中的headers
-    // } = ctx?.request;
-    // const client = {
-    //   method,
-    //   url,
-    //   host,
-    //   message,
-    //   referer: headers["referer"], // 请求的源地址
-    //   userAgent: headers["user-agent"], // 客户端信息 设备及浏览器信息
-    // };
-    // return JSON.stringify(Object.assign(commonInfo, client));
+    const endTime = Date.now();
+    const { status } = ctx.response;
+
+    const time = endTime - startTime + "ms";
+    log.info(method, status, url, "请求耗时:", time);
   };
 };
-module.exports = log;
+module.exports = logMrak;
