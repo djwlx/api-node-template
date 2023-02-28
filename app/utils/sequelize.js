@@ -1,5 +1,5 @@
 const { Sequelize } = require("sequelize");
-const { baseLog } = require("./logger");
+const { baseLog, log } = require("./logger");
 
 const sequelize = new Sequelize({
   dialect: "sqlite",
@@ -13,7 +13,7 @@ const sequelize = new Sequelize({
 
 try {
   sequelize.authenticate().then(() => {
-    module.exports = sequelize;
+    log.info("连接数据库成功");
   });
 } catch (error) {
   log.error("链接数据库错误", error);

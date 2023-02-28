@@ -1,8 +1,12 @@
-const user = require("../models/user");
+const userOp = require("../service/user");
 
 class User {
-  static queryUser = () => {
-    return user.findAll();
+  static test = async (ctx, next) => {
+    ctx.body = "test";
+  };
+  static show = async (ctx, next) => {
+    const result = await userOp.query();
+    ctx.body = result;
   };
 }
 module.exports = User;

@@ -1,8 +1,8 @@
 const path = require("path");
 const log4js = require("log4js");
 const LOG_PATH = path.join(path.resolve(__dirname, "../../"), "logs");
-// 对日志进行级别分类
-
+// 对日志进行级别分类,生产环境才会记录日志
+const { NODE_ENV } = process.env;
 log4js.configure({
   appenders: {
     info: {
@@ -36,23 +36,36 @@ log4js.configure({
       level: "info",
       appender: "info",
     },
+    consoleFilter: {
+      type: "logLevelFilter",
+      level: "error",
+      appender: "out",
+    },
     out: {
       type: "console",
     },
   },
   categories: {
-    default: {
-      appenders: ["infoFilter", "errorFilter", "out"],
+    development: {
+      appenders: ["out"],
+      level: "all",
+    },
+    production: {
+      appenders: ["infoFilter", "errorFilter", "consoleFilter"],
       level: "all",
     },
     dataBase: {
       appenders: ["dataBase"],
       level: "all",
     },
+    default: {
+      appenders: ["out"],
+      level: "all",
+    },
   },
 });
 
-const log = log4js.getLogger();
+const log = log4js.getLogger(NODE_ENV || "development");
 const baseLog = log4js.getLogger("dataBase");
 module.exports = {
   log,
