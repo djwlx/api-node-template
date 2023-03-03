@@ -1,4 +1,5 @@
 const JWT = require("../utils/jwt");
+const config = require("../../config/index");
 // 鉴权通过之后，将用户信息保存在state中方便后续操作
 // 没有权限返回401
 const authenticate = (option) => {
@@ -17,7 +18,7 @@ const authenticate = (option) => {
     }
 
     // 权限校验
-    const { xtoken } = header;
+    const xtoken = header[config.tokenHeader];
     if (!xtoken) {
       ctx.status = 401;
       ctx.body = {
@@ -39,9 +40,11 @@ const authenticate = (option) => {
           msg: "权限认证错误",
         };
       }
-      ctx.state.user = {
-        id: userID,
-      };
+      if (userID) {
+        ctx.state.user = {
+          id: userID,
+        };
+      }
       await next();
     }
   };

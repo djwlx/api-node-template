@@ -4,4 +4,5 @@ class User {
     return user.findAll();
   };
 }
+
 module.exports = User;
