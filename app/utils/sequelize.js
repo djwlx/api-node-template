@@ -1,6 +1,7 @@
 const { Sequelize } = require("sequelize");
 const { baseLog, log } = require("./logger");
 
+// 创建是同步的，执行数据库操作是异步的
 const sequelize = new Sequelize({
   dialect: "sqlite",
   storage: "../database/index.db",
@@ -16,7 +17,7 @@ try {
     log.info("连接数据库成功");
   });
 } catch (error) {
-  log.error("链接数据库错误", error);
+  log.error("连接数据库错误", error);
 }
 
 module.exports = sequelize;

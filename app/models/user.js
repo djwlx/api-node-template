@@ -9,5 +9,7 @@ const user = sequelize.define("User", {
     type: DataTypes.STRING,
   },
 });
-
+user.sync({ alter: true }).then((res) => {
+  console.log(res, "同步表结构成功");
+});
 module.exports = user;

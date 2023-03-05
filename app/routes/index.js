@@ -10,6 +10,7 @@ router
   .get("/", User.test)
   .get("/login", User.test)
   .get("/register", User.test)
-  .get("/show", User.show);
+  .get("/show", User.show)
+  .post("/add", User.create);
 
 module.exports = router;
