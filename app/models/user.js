@@ -8,7 +8,9 @@ const user = sequelize.define("User", {
   lastName: {
     type: DataTypes.STRING,
   },
+  sex: DataTypes.STRING,
 });
+
 user.sync({ alter: true }).then((res) => {
   console.log(res, "同步表结构成功");
 });
